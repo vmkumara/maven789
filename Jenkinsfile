@@ -1,0 +1,59 @@
+@Library('mylibrary')_
+pipeline
+{
+    agent any
+    stages
+    {
+        stage('condownload_MASTER')
+        {
+            steps
+            {
+                script
+                {
+                     cicd.newdownload("maven.git")
+                }
+            }
+        }
+        stage('conbuild_MASTER')
+        {
+            steps
+            {
+                script
+                {
+                     cicd.newbuild()
+                }
+            }
+        }
+        stage('condeployment_MASTER')
+        {
+            steps
+            {
+                script
+                {
+                     cicd.newdeployment("sharedlibrary2","172.31.19.149","testapp")
+                }
+            }
+        }
+        stage('contesting_MASTER')
+        {
+            steps
+            {
+                script
+                {
+                    cicd.newdownload("functionaltesting.git")
+                    cicd.runselenium("sharedlibrary2")
+                }
+            }
+        }
+        stage('condelivery_MASTER')
+        {
+            steps
+            {
+                script
+                {
+                    cicd.newdeployment("sharedlibrary2","172.31.21.74","prodapp")
+                }
+            }
+        }
+    }
+} 
